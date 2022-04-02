@@ -24,6 +24,7 @@ namespace OnlineMarker.Shared.Test.Controllers
             _mockService = new Mock<IOnlineMarkerService>();
             _controller = new ServicesController(_mockService.Object);
             _mockService.Setup(x => x.GetPaperQuesInfos(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(new List<PaperQuesInfo>() { new PaperQuesInfo { }, new PaperQuesInfo { } }));
+            
 
         }
 
@@ -34,6 +35,13 @@ namespace OnlineMarker.Shared.Test.Controllers
             Assert.IsInstanceOf<OkObjectResult>(items);
             Assert.IsInstanceOf<List<PaperQuesInfo>>((List<PaperQuesInfo>)((OkObjectResult)items).Value);
             Assert.AreEqual(((List<PaperQuesInfo>)((OkObjectResult)items).Value).Count, 2);
+        }
+
+        [Test]
+        public async Task Get_Papers_Quest_Info_Test_Bad_Request()
+        {
+            var items = await _controller.GetPaperQuestionInfo("", "");
+            Assert.IsInstanceOf<BadRequestObjectResult>(items);
         }
 
     }
