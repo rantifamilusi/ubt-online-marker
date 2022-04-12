@@ -16,11 +16,15 @@ namespace OnlineMarker.Shared
         public string? Schname { get; set; }
 
         public string? Indexnumber { get; set; }
+        public string? indexno { get; set; }
         public string? Candname { get; set; }
         public string? Papercode { get; set; }
         public string? Mark { get; set; }
         public string? Examinercode { get; set; }
+        public string? makerid { get; set; }
         public bool Seeded { get; set; }
+        public string? Seedmaster { get; set; }
+        public string? seededscript { get; set; }
         public int Totalmarked { get; set; }
         public int Queried { get; set; }
     }
