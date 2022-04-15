@@ -9,7 +9,6 @@ namespace OnlineMarker.Shared
    
     public class PapersInfo
     {
-       
 
         public int Subjectid { get; set; }
         

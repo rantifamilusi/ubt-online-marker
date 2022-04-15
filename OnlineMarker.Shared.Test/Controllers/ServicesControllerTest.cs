@@ -140,5 +140,130 @@ namespace OnlineMarker.Shared.Test.Controllers
 
         }
 
+
+        [Test]
+        public async Task Get_Candidate_Scores_Bad_Request()
+        {
+         
+            var items = await _controller.GetCandidateScores(0,"","",false,false,false,false, false, 0) ;
+            Assert.IsInstanceOf<BadRequestObjectResult>(items);
+
+        }
+
+        [Test]
+        public async Task Get_Candidate_Scores_With_Seeded_true()
+        {
+            _mockService
+                .Setup(x => x.Seed_GetCandScores(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult (new List<QScoreInfo>() { new QScoreInfo { }, new QScoreInfo { } } ));
+
+
+            _mockService
+               .Setup(x => x.CandScoresVet_InsertTemp(It.IsAny<int>(), It.IsAny<string>()))
+               .Returns(true);
+
+
+
+            var items = await _controller.GetCandidateScores(0, "test", "test", false, false, true, true, false, 0);
+            Assert.IsInstanceOf<OkObjectResult>(items);
+            Assert.IsInstanceOf<List<QScoreInfo>>((List<QScoreInfo>)((OkObjectResult)items).Value);
+            Assert.AreEqual(((List<QScoreInfo>)((OkObjectResult)items).Value).Count, 2);
+            _mockService.Verify(x => x.Seed_GetCandScores(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once());
+
+            _mockService.Verify(x => x.CandScoresVet_InsertTemp(It.IsAny<int>(), It.IsAny<string>()), Times.Never());
+        }
+
+        [Test]
+        public async Task Get_Candidate_Scores_With_vet_obj_true_with_checkvet_greater_than_0()
+        {
+            _mockService
+                .Setup(x => x.GetCandScores_Vet(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(new List<QScoreInfo>() { new QScoreInfo { }, new QScoreInfo { } }));
+
+            _mockService
+               .Setup(x => x.GetCandScores(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
+               .Returns(Task.FromResult(new List<QScoreInfo>() { new QScoreInfo { }, new QScoreInfo { } }));
+
+            _mockService
+               .Setup(x => x.CandScoresVet_InsertTemp(It.IsAny<int>(), It.IsAny<string>()))
+               .Returns(true);
+
+            _mockService
+              .Setup(x => x.CandScoresReview_InsertTemp(It.IsAny<int>(), It.IsAny<string>()))
+              .Returns(true);
+
+
+            _mockService
+           .Setup(x => x.CandScores_CheckVet(It.IsAny<int>()))
+           .Returns(1);
+
+
+            var items = await _controller.GetCandidateScores(0, "test", "test", true, false, false, true, false, 0);
+            Assert.IsInstanceOf<OkObjectResult>(items);
+            Assert.IsInstanceOf<List<QScoreInfo>>((List<QScoreInfo>)((OkObjectResult)items).Value);
+            Assert.AreEqual(((List<QScoreInfo>)((OkObjectResult)items).Value).Count, 2);
+            _mockService.Verify(x => x.Seed_GetCandScores(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
+            _mockService.Verify(x => x.GetCandScores(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
+
+            _mockService.Verify(x => x.CandScoresVet_InsertTemp(It.IsAny<int>(), It.IsAny<string>()), Times.Once());
+            _mockService.Verify(x => x.CandScoresReview_InsertTemp(It.IsAny<int>(), It.IsAny<string>()), Times.Never());
+        }
+
+        [Test]
+        public async Task Get_Candidate_Scores_With_vet_obj_true_with_checkvet_less_than_0()
+        {
+            _mockService
+                .Setup(x => x.GetCandScores_Vet(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(new List<QScoreInfo>() { new QScoreInfo { }, new QScoreInfo { } }));
+
+            _mockService
+               .Setup(x => x.GetCandScores(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
+               .Returns(Task.FromResult(new List<QScoreInfo>() { new QScoreInfo { }, new QScoreInfo { } }));
+
+            _mockService
+               .Setup(x => x.CandScoresVet_InsertTemp(It.IsAny<int>(), It.IsAny<string>()))
+               .Returns(true);
+
+            _mockService
+              .Setup(x => x.CandScoresReview_InsertTemp(It.IsAny<int>(), It.IsAny<string>()))
+              .Returns(true);
+
+
+            _mockService
+           .Setup(x => x.CandScores_CheckVet(It.IsAny<int>()))
+           .Returns(0);
+
+
+            var items = await _controller.GetCandidateScores(0, "test", "test", true, false, false, true, false, 0);
+            Assert.IsInstanceOf<OkObjectResult>(items);
+            Assert.IsInstanceOf<List<QScoreInfo>>((List<QScoreInfo>)((OkObjectResult)items).Value);
+            Assert.AreEqual(((List<QScoreInfo>)((OkObjectResult)items).Value).Count, 2);
+            _mockService.Verify(x => x.Seed_GetCandScores(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
+            _mockService.Verify(x => x.GetCandScores(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once());
+            _mockService.Verify(x => x.GetCandScores_Vet(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
+            _mockService.Verify(x => x.CandScoresVet_InsertTemp(It.IsAny<int>(), It.IsAny<string>()), Times.Once());
+            _mockService.Verify(x => x.CandScoresReview_InsertTemp(It.IsAny<int>(), It.IsAny<string>()), Times.Never());
+        }
+
+        [Test]
+        public async Task Get_Candidate_Scores_all_false()
+        {
+            _mockService
+                .Setup(x => x.GetCandScores_Temp(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(new List<QScoreInfo>() { new QScoreInfo { }, new QScoreInfo { } }));
+
+
+
+            var items = await _controller.GetCandidateScores(0, "test", "test", false, false, false, false, false, 0);
+            Assert.IsInstanceOf<OkObjectResult>(items);
+            Assert.IsInstanceOf<List<QScoreInfo>>((List<QScoreInfo>)((OkObjectResult)items).Value);
+            Assert.AreEqual(((List<QScoreInfo>)((OkObjectResult)items).Value).Count, 2);
+            _mockService.Verify(x => x.Seed_GetCandScores(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
+            _mockService.Verify(x => x.GetCandScores_Temp(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once());
+            _mockService.Verify(x => x.GetCandScores_Vet(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
+            _mockService.Verify(x => x.CandScoresVet_InsertTemp(It.IsAny<int>(), It.IsAny<string>()), Times.Never());
+            _mockService.Verify(x => x.CandScoresReview_InsertTemp(It.IsAny<int>(), It.IsAny<string>()), Times.Never());
+        }
+
     }
 }

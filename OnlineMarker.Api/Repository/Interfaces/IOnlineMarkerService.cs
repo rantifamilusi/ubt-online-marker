@@ -5,6 +5,19 @@ namespace OnlineMarker.Api.Repository.Interfaces
     public interface IOnlineMarkerService
     {
         Task<List<PaperQuesInfo>> GetPaperQuesInfos(string examptype, string papercode);
+
+        bool CandScoresVet_InsertTemp(int markid, string markerid);
+        bool CandScoresReview_InsertTemp(int markid, string markerid);
+
+        Task<List<QScoreInfo>> GetCandScores_Temp(int markid, string markerid, string scriptno);
+
+        Task<List<QScoreInfo>> GetCandScores_Vet(int markid, string examinercode, string scriptno);
+
+        Task<List<QScoreInfo>> GetCandScores(int markid, string examinercode, string scriptno);
+       
+        int CandScores_CheckVet(int markid);
+
+        Task<List<QScoreInfo>> Seed_GetCandScores(int markid, string markerid, string scriptno);
         int DepletedSeed_Insert(string examtype, string papercode, string examinercode);
 
         ScriptInfo GetNewScript(string examtype, string papercode, string examinercode, int totalscriptsmarked, int minvet, SeedInfo seededinfo);

@@ -763,5 +763,124 @@ namespace OnlineMarker.Api.Repository.Implementation
 
             return newscript;
         }
+
+       
+
+        public async Task<List<QScoreInfo>> Seed_GetCandScores(int markid, string markerid, string scriptno)
+        {
+            List<QScoreInfo> qScoreInfos = new List<QScoreInfo>();
+
+            await _dbContext.LoadStoredProc("WS_sp_LoadCandScores_Seed")
+                 .WithSqlParam("markid", markid)
+                 .WithSqlParam("markerid", markerid)
+                 .WithSqlParam("scriptno", scriptno)
+                 .ExecuteStoredProcAsync(x =>
+                 {
+                     var result = x.ReadToList<QScoreInfo>();
+                     qScoreInfos = result.ToList();
+                 });
+            return await Task.FromResult(qScoreInfos);
+        }
+
+        public bool CandScoresVet_InsertTemp(int markid, string markerid)
+        {
+            try
+            {
+                
+                _dbContext.LoadStoredProc("WS_sp_VetCandScores_InsertTemp")
+                                    .WithSqlParam("markid", markid)
+                                    .WithSqlParam("markerid", markerid)
+                                                         .ExecuteNonQuery();
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
+        }
+
+        public bool CandScoresReview_InsertTemp(int markid, string markerid)
+        {
+            try
+            {
+
+                _dbContext.LoadStoredProc("WS_sp_ReviewCandScores_InsertTemp")
+                                    .WithSqlParam("markid", markid)
+                                    .WithSqlParam("markerid", markerid)
+                                                         .ExecuteNonQuery();
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
+        }
+
+        public int CandScores_CheckVet (int markid)
+        {
+            try
+            {
+                int? data = 0;
+                data = (int?)_dbContext.LoadStoredProc("WS_sp_CandScores_CheckVet")
+                                     .WithSqlParam("markid", markid)
+                                     .ExecuteScalar();
+                return data ?? 0;
+            }
+            catch
+            {
+
+                return 0;
+            }
+        }
+
+        public async Task<List<QScoreInfo>> GetCandScores_Vet(int markid, string examinercode, string scriptno)
+        {
+            List<QScoreInfo> qScoreInfos = new List<QScoreInfo>();
+
+            await _dbContext.LoadStoredProc("WS_sp_LoadCandScores_Vet")
+                 .WithSqlParam("markid", markid)
+                 .WithSqlParam("examinercode", examinercode)
+                 .WithSqlParam("scriptno", scriptno)
+                 .ExecuteStoredProcAsync(x =>
+                 {
+                     var result = x.ReadToList<QScoreInfo>();
+                     qScoreInfos = result.ToList();
+                 });
+            return await Task.FromResult(qScoreInfos);
+        }
+
+        public async Task<List<QScoreInfo>> GetCandScores(int markid, string examinercode, string scriptno)
+        {
+            List<QScoreInfo> qScoreInfos = new List<QScoreInfo>();
+
+            await _dbContext.LoadStoredProc("WS_sp_LoadCandScores")
+                 .WithSqlParam("markid", markid)
+                 .WithSqlParam("examinercode", examinercode)
+                 .WithSqlParam("scriptno", scriptno)
+                 .ExecuteStoredProcAsync(x =>
+                 {
+                     var result = x.ReadToList<QScoreInfo>();
+                     qScoreInfos = result.ToList();
+                 });
+            return await Task.FromResult(qScoreInfos);
+        }
+
+        public async  Task<List<QScoreInfo>> GetCandScores_Temp(int markid, string markerid, string scriptno)
+        {
+            List<QScoreInfo> qScoreInfos = new List<QScoreInfo>();
+
+            await _dbContext.LoadStoredProc("WS_sp_LoadCandScores_Temp")
+                 .WithSqlParam("markid", markid)
+                 .WithSqlParam("markerid", markerid)
+                 .WithSqlParam("scriptno", scriptno)
+                 .ExecuteStoredProcAsync(x =>
+                 {
+                     var result = x.ReadToList<QScoreInfo>();
+                     qScoreInfos = result.ToList();
+                 });
+            return await Task.FromResult(qScoreInfos);
+        }
     }
 }

@@ -46,6 +46,39 @@ namespace OnlineMarker.Api.Controllers
                 return new OkObjectResult( await _onlineMarkerService.GetPaperQuesInfos(examtype, papercode));
             
         }
+
+        [HttpGet]
+        [Route("GetCandidateScores")]
+        public async Task<IActionResult> GetCandidateScores(int markid, string markerid, string scriptno, bool vetobj, bool seedmasterobj, bool seeded, bool reviewobj, bool reviewteam, int scripttype)
+        {
+            if (string.IsNullOrEmpty(scriptno) || string.IsNullOrEmpty(markerid)) return BadRequest("Parameters are missing");
+
+            if (seedmasterobj == true | seeded == true)
+                return new OkObjectResult(await _onlineMarkerService.Seed_GetCandScores(markid, markerid, scriptno));
+            if (vetobj == true)
+                _onlineMarkerService.CandScoresVet_InsertTemp(markid, markerid);
+            if (reviewobj == true)
+            {
+                if (scripttype == 1)
+                    _onlineMarkerService.CandScoresReview_InsertTemp(markid, markerid);
+                else if (_onlineMarkerService.CandScores_CheckVet(markid) > 0)
+                    return new OkObjectResult(await _onlineMarkerService.GetCandScores_Vet(markid, markerid, scriptno));
+                else
+                    return new OkObjectResult(await _onlineMarkerService.GetCandScores(markid, markerid, scriptno));
+            }
+            if ((reviewteam == true))
+            {
+                if ((_onlineMarkerService.CandScores_CheckVet(markid) > 0))
+
+                    return new OkObjectResult(await _onlineMarkerService.GetCandScores_Vet(markid, markerid, scriptno));
+                else
+
+                    return new OkObjectResult(await _onlineMarkerService.GetCandScores(markid, markerid, scriptno));
+            }
+            return new OkObjectResult(await _onlineMarkerService.GetCandScores_Temp(markid, markerid, scriptno));
+        }
+
+
         [HttpPost]
         [Route("GetCandidateScripts")]
         public async Task<IActionResult> GetCandidateScripts(GetCandidateScriptsRequest request)
