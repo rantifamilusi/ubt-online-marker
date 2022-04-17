@@ -23,3 +23,12 @@
 5. Set OnlineMarker.Api as Start Up Project
 6. Run API
 7. Try the services
+
+## Diagram
+![Diagram](/ubt-online-marker.drawio.png)
+
+[Edit Diagram](https://app.diagrams.net/?mode=github#Hrantifamilusi%2Fubt-online-marker%2Fmaster%2FOnlineMarker.Api%2Fubt-online-marker.drawio)
+
+## Blazor API Call
+To use the API, follow the documentation in the link
+``https://docs.microsoft.com/en-us/aspnet/core/blazor/call-web-api?view=aspnetcore-6.0&pivots=server``
