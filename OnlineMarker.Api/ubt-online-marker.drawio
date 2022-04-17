@@ -1,1 +1,34 @@
-<mxfile host="app.diagrams.net" modified="2022-04-17T01:48:47.106Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36" version="17.4.5" etag="D9AOiWIY29lgT2tKI1Vx" type="github"><diagram id="Sm2pb3-F4sastgEHSxYW">UzV2zq1wL0osyPDNT0nNUTV2VTV2LsrPL4GwciucU3NyVI0MMlNUjV1UjYwMgFjVyA2HrCFY1qAgsSg1rwSLBiADYTaQg2Y1AA==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2022-04-17T02:00:37.587Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36" etag="Z1Lg-Kc11dx6gBEjFruJ" version="17.4.5" type="github">
+  <diagram id="Sm2pb3-F4sastgEHSxYW" name="Page-1">
+    <mxGraphModel dx="1255" dy="813" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="kM6qKKS9JfJ38p3c9ldp-9" value="REST - C#" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;verticalAlign=top;spacingTop=5;fontSize=21;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="150" y="140" width="320" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="kM6qKKS9JfJ38p3c9ldp-3" value="" style="sketch=0;outlineConnect=0;fontColor=#ffffff;fillColor=#e51400;strokeColor=#B20000;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.rds_sql_server_instance;" vertex="1" parent="1">
+          <mxGeometry x="500" y="90" width="250" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="kM6qKKS9JfJ38p3c9ldp-4" value="" style="sketch=0;html=1;dashed=0;whitespace=wrap;fillColor=#f5f5f5;strokeColor=#666666;points=[[0.005,0.63,0],[0.1,0.2,0],[0.9,0.2,0],[0.5,0,0],[0.995,0.63,0],[0.72,0.99,0],[0.5,1,0],[0.28,0.99,0]];shape=mxgraph.kubernetes.icon;prIcon=api;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="250" y="187" width="90" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="kM6qKKS9JfJ38p3c9ldp-6" value="Store Procedures" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/gnomeicontheme/24x24/stock/code/stock_macro-stop-after-procedure.png" vertex="1" parent="1">
+          <mxGeometry x="550" y="206" width="54" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="kM6qKKS9JfJ38p3c9ldp-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=21;strokeWidth=2;" edge="1" parent="1" source="kM6qKKS9JfJ38p3c9ldp-8" target="kM6qKKS9JfJ38p3c9ldp-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="kM6qKKS9JfJ38p3c9ldp-8" value="Snickler.EFCore" style="text;html=1;strokeColor=#B09500;fillColor=#e3c800;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="350" y="218" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="kM6qKKS9JfJ38p3c9ldp-10" value="" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.http_2_protocol;fillColor=#1ba1e2;rounded=1;strokeColor=#006EAF;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="120" y="200" width="63" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="kM6qKKS9JfJ38p3c9ldp-13" value="&lt;h1 style=&quot;font-size: 18px;&quot;&gt;Design Notes&lt;/h1&gt;&lt;p style=&quot;font-size: 18px;&quot;&gt;- REST API is built with C#&lt;/p&gt;&lt;p style=&quot;font-size: 18px;&quot;&gt;- Snickler.EFCore library to execute stored procedures&lt;/p&gt;&lt;p style=&quot;font-size: 18px;&quot;&gt;- All interaction with database was via stored procedures&lt;/p&gt;&lt;p style=&quot;font-size: 18px;&quot;&gt;- Database is SQL Server&amp;nbsp;&lt;/p&gt;" style="text;html=1;strokeColor=#BD7000;fillColor=#f0a30a;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;fontSize=18;fontColor=#000000;opacity=50;" vertex="1" parent="1">
+          <mxGeometry x="183" y="370" width="470" height="190" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
