@@ -19,6 +19,11 @@ namespace OnlineMarker.Api.Repository.Implementation
           return  new DirectoryInfo(path);
         }
 
+        public FileInfo GetFileInfo(string path)
+        {
+           return  new FileInfo(path);
+        }
+
         public FileInfo[] GetFiles(string rootpath, string path, SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
             return new DirectoryInfo(rootpath).GetFiles(path, searchOption);
@@ -27,6 +32,11 @@ namespace OnlineMarker.Api.Repository.Implementation
         public FileInfo[] GetFiles(DirectoryInfo folder, string path, SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
             return folder.GetFiles(path, searchOption);
+        }
+
+        public void WriteAllBytes(string path, byte[] byteData)
+        {
+            File.WriteAllBytes(path, byteData);
         }
     }
 }

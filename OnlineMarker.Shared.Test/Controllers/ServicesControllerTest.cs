@@ -21,6 +21,7 @@ namespace OnlineMarker.Shared.Test.Controllers
         Mock<IFileService>? _mockFileService;
         Mock<IOptions<AppSettings>>? _mockAppSettings;
          Mock<IValidator<GetCandidateScriptsRequest>> _validatorMock;
+        Mock<IValidator<SaveMarkedScriptsRequest>> _validatorMockSaveMarkedcript;
         ServicesController? _controller;
 
         [OneTimeSetUp]
@@ -32,7 +33,9 @@ namespace OnlineMarker.Shared.Test.Controllers
             _mockFileService = new Mock<IFileService>();
             _mockAppSettings = new Mock<IOptions<AppSettings>>();
             _validatorMock = new Mock<IValidator<GetCandidateScriptsRequest>>();
-          
+            _validatorMockSaveMarkedcript = new Mock<IValidator<SaveMarkedScriptsRequest>>();
+
+
             _mockAppSettings
                 .Setup ( x => x.Value)
                 .Returns(new AppSettings {  DataPath = "File_Location", ExamYear="2022"});
@@ -47,7 +50,7 @@ namespace OnlineMarker.Shared.Test.Controllers
 
             _mockService.Setup(x => x.GetPaperQuesInfos(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(new List<PaperQuesInfo>() { new PaperQuesInfo { }, new PaperQuesInfo { } }));
 
-            _controller = new ServicesController(_mockService.Object, _mockFileService.Object, _mockAppSettings.Object, _validatorMock.Object);
+            _controller = new ServicesController(_mockService.Object, _mockFileService.Object, _mockAppSettings.Object, _validatorMock.Object, _validatorMockSaveMarkedcript.Object);
 
         }
 
@@ -139,6 +142,7 @@ namespace OnlineMarker.Shared.Test.Controllers
 
 
         }
+
 
 
         [Test]
@@ -265,5 +269,58 @@ namespace OnlineMarker.Shared.Test.Controllers
             _mockService.Verify(x => x.CandScoresReview_InsertTemp(It.IsAny<int>(), It.IsAny<string>()), Times.Never());
         }
 
+        [Test]
+        public async Task Save_Marked_Script_Bad_Request()
+        {
+            _validatorMockSaveMarkedcript.Setup(x => x.Validate(It.IsAny<SaveMarkedScriptsRequest>()))
+            .Returns(new ValidationResult(
+                new List<ValidationFailure>() { new ValidationFailure("examtype", "missing") }));
+
+            var items = await _controller.SaveMarkedScripts(new SaveMarkedScriptsRequest { });
+            Assert.IsInstanceOf<BadRequestObjectResult>(items);
+
+        }
+
+        [Test]
+        public async Task Save_Marked_Script()
+        {
+
+            _validatorMockSaveMarkedcript.Setup(x => x.Validate(It.IsAny<SaveMarkedScriptsRequest>()))
+           .Returns(new ValidationResult(
+               new List<ValidationFailure>()));
+
+            _mockService
+                .Setup(x => x.SeedQScore_Insert(It.IsAny<QScoreInfo>()))
+                .Returns(true);
+
+            _mockService
+               .Setup(x => x.QScore_Insert(It.IsAny<QScoreInfo>()))
+               .Returns(true);
+
+            _mockService
+                 .Setup(x => x.QScore_UpdateMarkedPages(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
+                 .Returns(true);
+
+            _mockService
+               .Setup(x => x.QueryCandScript_MAL(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
+               .Returns(true);
+
+
+            string filePath = @"C:\Test\a.txt";
+
+            _mockFileService
+           .Setup(x => x.GetFileInfo(It.IsAny<string>()))
+           .Returns(new FileInfo(filePath));
+
+            _mockFileService
+        .Setup(x => x.WriteAllBytes(It.IsAny<string>(), It.IsAny<byte[]>()));
+        
+
+            var items = await _controller.SaveMarkedScripts(new SaveMarkedScriptsRequest { seedmasterobj = true, examtype = "test", indexno = "indexnumber", markerid = "marker", papercode = "02", quesno="2",malpractice=0,markedpages="5",markid=2,marksposition="r",nullquesno=false,scriptno="3",sfiles = new List<SFilesInfo>() { },seededscriptid ="2",vetteeid ="3" }); ;
+            Assert.IsInstanceOf<OkObjectResult>(items);
+            _mockFileService.Verify(x => x.WriteAllBytes(It.IsAny<string>(), It.IsAny<byte[]>()), Times.Never());
+
+
+        }
     }
 }

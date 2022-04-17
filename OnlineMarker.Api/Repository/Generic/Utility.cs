@@ -68,7 +68,71 @@ namespace OnlineMarker.Api.Repository.Generic
             return true;
         }
 
+        public static string GetResponse (string code)
+        {
 
+            string returnString = string.Empty;
+            switch (code)
+            {
+                case "01":
+                    {
+                        returnString = code + "-" + "Successful";
+                        
+                        break;
+                    }
+
+                case "02":
+                    {
+                        returnString = code + "-" + "Error saving Script";
+                        
+                        break;
+                    }
+
+                case "03":
+                    {
+                        returnString = code + "-" + "Error saving Question Score";
+                        
+                        break;
+                    }
+
+                case "04":
+                    {
+                        returnString = code + "-" + "Error submitting script";
+                       
+                        break;
+                    }
+
+                case "05":
+                    {
+                        returnString = code + "-" + "Error deleting score";
+                        
+                        break;
+                    }
+
+                case "06":
+                    {
+                        returnString = code + "-" + "Error Blocking Examiner";
+                        
+                        break;
+                    }
+
+                case "07":
+                    {
+                        returnString = code + "-" + "Error loading script";
+                        
+                        break;
+                    }
+
+                default:
+                    {
+                        returnString = code + "-" + "Unknown Status";
+                       
+                        break;
+                    }
+            }
+
+            return returnString;
+        }
         public static int GetNextSeedValue(int seedinterval, int totalmarked)
         {
       

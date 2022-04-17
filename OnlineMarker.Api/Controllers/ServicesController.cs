@@ -19,14 +19,16 @@ namespace OnlineMarker.Api.Controllers
         private readonly IOnlineMarkerService _onlineMarkerService;
         private  IFileService _fileService;
         private readonly AppSettings _appSettings;
-        private readonly IValidator<GetCandidateScriptsRequest> _validator;
+        private readonly IValidator<GetCandidateScriptsRequest> _validatorCandidateRequest;
+        private readonly IValidator<SaveMarkedScriptsRequest> _validatorSavedMarkScriptRequest;
         public ServicesController(IOnlineMarkerService onlineMarkerService, 
             IFileService fileService, 
             IOptions<AppSettings> appSettings,
-            IValidator<GetCandidateScriptsRequest> validator)
+            IValidator<GetCandidateScriptsRequest> validator, IValidator<SaveMarkedScriptsRequest> validatorS)
         {
             _onlineMarkerService = onlineMarkerService;
-            _validator = validator;
+            _validatorCandidateRequest = validator;
+            _validatorSavedMarkScriptRequest = validatorS;
             _fileService = fileService;
             _appSettings = appSettings.Value;
         }
@@ -83,7 +85,7 @@ namespace OnlineMarker.Api.Controllers
         [Route("GetCandidateScripts")]
         public async Task<IActionResult> GetCandidateScripts(GetCandidateScriptsRequest request)
         {
-            var result = _validator.Validate(request);
+            var result = _validatorCandidateRequest.Validate(request);
             if (!result.IsValid)
                 return BadRequest(result.Errors);
             
@@ -329,6 +331,103 @@ namespace OnlineMarker.Api.Controllers
                 return new OkObjectResult(Utility.GetNoScriptInfo(-99));
                 
             }
+        }
+
+
+        [HttpPost]
+        [Route("SaveMarkedScripts")]
+        public async Task<IActionResult> SaveMarkedScripts(SaveMarkedScriptsRequest request)
+        {
+            var result = _validatorSavedMarkScriptRequest.Validate(request);
+            if (!result.IsValid)
+                return BadRequest(result.Errors);
+
+            InitFileService(new FileService());
+
+            try
+            {
+                bool iret = false;
+
+                string filepath = Path.Combine(_appSettings.DataPath, request.papercode);
+
+                // save score for question
+                if (request.nullquesno == false)
+                {
+                    QScoreInfo qscore = new QScoreInfo
+                    {
+                        examtype = request.examtype,
+                        markid = request.markid,
+                        papercode = request.papercode,
+                        quesno = int.Parse(request.quesno),
+                        score = request.score,
+                        numticks = request.tickno,
+                        mqa = request.mqaobj,
+                        indexnumber = request.indexno,
+                        scriptno = request.scriptno,
+                        mecherror = request.mecherror,
+                        wordscount = request.wordscount,
+                        markedpages = request.markedpages,
+                        seeded = request.seededques,
+                        marksposition = request.marksposition
+                    };
+
+                    if (request.seedmasterobj == true)
+                        qscore.seedmaster = request.scriptno;
+
+                    if (request.seedmasterobj == true || request.seeded == true)
+                    {
+                        qscore.scriptno = request.seededscriptid;
+                        qscore.examinercode = request.markerid;
+                        iret = _onlineMarkerService.SeedQScore_Insert(qscore);
+                    }
+                    else
+                    {
+                        if (request.vetobj == true)
+                        {
+                            qscore.vetted = 1;
+                            qscore.vetterid = request.markerid;
+                            qscore.examinercode = request.vetteeid;
+                        }
+                        else if (request.reviewobj == true)
+                        {
+                            qscore.review = 1;
+                            qscore.examinercode = request.markerid;
+                        }
+                        else
+                            qscore.examinercode = request.markerid;
+
+                        iret = _onlineMarkerService.QScore_Insert(qscore);
+                    }
+
+                    if (iret == false)
+                        return new OkObjectResult(Utility.GetResponse("03"));
+                  
+                }
+                else
+                    _onlineMarkerService.QScore_UpdateMarkedPages(request.markid, int.Parse(request.quesno), request.markedpages);
+
+                if (request.seedmasterobj == false && request.seeded == false)
+                {
+                    if (request.malpractice > 0)
+                        _onlineMarkerService.QueryCandScript_MAL(request.markid, request.scriptno, request.malpractice);
+                }
+                else
+                    filepath = Path.Combine(filepath, "MarkedSeededScripts");
+
+                foreach (SFilesInfo sfile in request.sfiles)
+                {
+                    FileInfo fileinfo = _fileService.GetFileInfo(Convert.ToString(filepath + @"\" + @"\" + sfile.SFileName));
+                    _fileService.WriteAllBytes(fileinfo.FullName, sfile.SFilebyte);
+                }
+            }
+            catch (Exception ex)
+            {
+                
+              
+                return new OkObjectResult(Utility.GetResponse("02"));
+            }
+          
+            return new OkObjectResult(Utility.GetResponse("01"));
         }
     }
 }

@@ -882,5 +882,109 @@ namespace OnlineMarker.Api.Repository.Implementation
                  });
             return await Task.FromResult(qScoreInfos);
         }
+
+        public bool SeedQScore_Insert(QScoreInfo oinfo)
+        {
+            try
+            {
+                int? data = 0;
+               data = (int?)_dbContext.LoadStoredProc("WS_sp_SaveQScores_Seed")
+                                    .WithSqlParam("examtype", oinfo.examtype)
+                                    .WithSqlParam("markid", oinfo.markid)
+                                     .WithSqlParam("papercode", oinfo.papercode)
+                                    .WithSqlParam("quesno", oinfo.quesno)
+                                     .WithSqlParam("score", oinfo.score)
+                                    .WithSqlParam("numticks", oinfo.numticks)
+                                     .WithSqlParam("examinercode", oinfo.examinercode)
+                                    .WithSqlParam("indexnumber", oinfo.indexnumber)
+                                     .WithSqlParam("scriptno", oinfo.scriptno)
+                                    .WithSqlParam("mqa", oinfo.mqa)
+                                     .WithSqlParam("mecherror", oinfo.mecherror)
+                                    .WithSqlParam("wordscount", oinfo.wordscount)
+                                 .WithSqlParam("seedmaster", oinfo.seedmaster)
+                                    .WithSqlParam("markedpages", oinfo.markedpages)
+                                    .WithSqlParam("seeded", oinfo.seeded)
+                                    .WithSqlParam("marksposition", oinfo.marksposition)
+                                                         .ExecuteScalar();
+                return data == null || data == 0 ? false: true;
+            }
+            catch
+            {
+
+                return false;
+            }
+        }
+
+        public bool QScore_Insert(QScoreInfo oinfo)
+        {
+            try
+            {
+                int? data = 0;
+                data = (int?)_dbContext.LoadStoredProc("WS_sp_SaveQScores")
+                                     .WithSqlParam("examtype", oinfo.examtype)
+                                     .WithSqlParam("markid", oinfo.markid)
+                                      .WithSqlParam("papercode", oinfo.papercode)
+                                     .WithSqlParam("quesno", oinfo.quesno)
+                                      .WithSqlParam("score", oinfo.score)
+                                     .WithSqlParam("numticks", oinfo.numticks)
+                                      .WithSqlParam("examinercode", oinfo.examinercode)
+                                     .WithSqlParam("indexnumber", oinfo.indexnumber)
+                                      .WithSqlParam("scriptno", oinfo.scriptno)
+                                     .WithSqlParam("mqa", oinfo.mqa)
+                                      .WithSqlParam("mecherror", oinfo.mecherror)
+                                     .WithSqlParam("wordscount", oinfo.wordscount)
+                                     .WithSqlParam("markedpages", oinfo.markedpages)
+                                  .WithSqlParam("marksposition", oinfo.marksposition)
+                                     .WithSqlParam("review", oinfo.review)
+                                     .WithSqlParam("vetted", oinfo.vetted)
+                                     .WithSqlParam("vetterid", oinfo.vetterid)
+                                                          .ExecuteScalar();
+                return data == null || data == 0 ? false : true;
+            }
+            catch
+            {
+
+                return false;
+            }
+        }
+
+        public bool QueryCandScript_MAL(int markid, string scriptno, int malpractice)
+        {
+            try
+            {
+
+                _dbContext.LoadStoredProc("WS_sp_QueryScript_MAL")
+                                    .WithSqlParam("markid", markid)
+                                    .WithSqlParam("scriptno", scriptno)
+                                    .WithSqlParam("malpractice", malpractice)
+                                                         .ExecuteNonQuery();
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
+        }
+
+        public bool QScore_UpdateMarkedPages(int markid, int quesno, string markedpages)
+        {
+            try
+            {
+
+                _dbContext.LoadStoredProc("WS_sp_UpdateQScores_Pages")
+                                    .WithSqlParam("markid", markid)
+                                    .WithSqlParam("quesno", quesno)
+                                    .WithSqlParam("markedpages", markedpages)
+                                                         .ExecuteNonQuery();
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
+        }
     }
+    
 }

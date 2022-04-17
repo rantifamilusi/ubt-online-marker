@@ -6,6 +6,11 @@ namespace OnlineMarker.Api.Repository.Interfaces
     {
         Task<List<PaperQuesInfo>> GetPaperQuesInfos(string examptype, string papercode);
 
+        bool QScore_UpdateMarkedPages(int markid, int quesno, string markedpages);
+
+        bool SeedQScore_Insert(QScoreInfo oinfo);
+        bool QScore_Insert(QScoreInfo oinfo);
+        bool QueryCandScript_MAL(int markid, string scriptno, int malpractice);
         bool CandScoresVet_InsertTemp(int markid, string markerid);
         bool CandScoresReview_InsertTemp(int markid, string markerid);
 
