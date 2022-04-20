@@ -22,6 +22,9 @@ namespace OnlineMarker.Shared.Test.Controllers
         Mock<IOptions<AppSettings>>? _mockAppSettings;
          Mock<IValidator<GetCandidateScriptsRequest>> _validatorMock;
         Mock<IValidator<SaveMarkedScriptsRequest>> _validatorMockSaveMarkedcript;
+        Mock<IValidator<SubmitMarkedScriptRequest>> _validatorMockSubmitMarkedScript;
+        Mock<IValidator<ResetScriptRequest>> _validatorMockResetMarkedScript;
+
         ServicesController? _controller;
 
         [OneTimeSetUp]
@@ -34,6 +37,8 @@ namespace OnlineMarker.Shared.Test.Controllers
             _mockAppSettings = new Mock<IOptions<AppSettings>>();
             _validatorMock = new Mock<IValidator<GetCandidateScriptsRequest>>();
             _validatorMockSaveMarkedcript = new Mock<IValidator<SaveMarkedScriptsRequest>>();
+            _validatorMockSubmitMarkedScript = new Mock<IValidator<SubmitMarkedScriptRequest>>();
+            _validatorMockResetMarkedScript = new Mock<IValidator<ResetScriptRequest>>();
 
 
             _mockAppSettings
@@ -50,7 +55,7 @@ namespace OnlineMarker.Shared.Test.Controllers
 
             _mockService.Setup(x => x.GetPaperQuesInfos(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(new List<PaperQuesInfo>() { new PaperQuesInfo { }, new PaperQuesInfo { } }));
 
-            _controller = new ServicesController(_mockService.Object, _mockFileService.Object, _mockAppSettings.Object, _validatorMock.Object, _validatorMockSaveMarkedcript.Object);
+            _controller = new ServicesController(_mockService.Object, _mockFileService.Object, _mockAppSettings.Object, _validatorMock.Object, _validatorMockSaveMarkedcript.Object,_validatorMockSubmitMarkedScript.Object, _validatorMockResetMarkedScript.Object);
 
         }
 
@@ -180,6 +185,8 @@ namespace OnlineMarker.Shared.Test.Controllers
         [Test]
         public async Task Get_Candidate_Scores_With_vet_obj_true_with_checkvet_greater_than_0()
         {
+            _controller = new ServicesController(_mockService.Object, _mockFileService.Object, _mockAppSettings.Object, _validatorMock.Object, _validatorMockSaveMarkedcript.Object, _validatorMockSubmitMarkedScript.Object, _validatorMockResetMarkedScript.Object);
+
             _mockService
                 .Setup(x => x.GetCandScores_Vet(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(new List<QScoreInfo>() { new QScoreInfo { }, new QScoreInfo { } }));
@@ -206,7 +213,7 @@ namespace OnlineMarker.Shared.Test.Controllers
             Assert.IsInstanceOf<OkObjectResult>(items);
             Assert.IsInstanceOf<List<QScoreInfo>>((List<QScoreInfo>)((OkObjectResult)items).Value);
             Assert.AreEqual(((List<QScoreInfo>)((OkObjectResult)items).Value).Count, 2);
-            _mockService.Verify(x => x.Seed_GetCandScores(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
+           //_mockService.Verify(x => x.Seed_GetCandScores(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
             _mockService.Verify(x => x.GetCandScores(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
 
             _mockService.Verify(x => x.CandScoresVet_InsertTemp(It.IsAny<int>(), It.IsAny<string>()), Times.Once());
@@ -216,6 +223,8 @@ namespace OnlineMarker.Shared.Test.Controllers
         [Test]
         public async Task Get_Candidate_Scores_With_vet_obj_true_with_checkvet_less_than_0()
         {
+            _controller = new ServicesController(_mockService.Object, _mockFileService.Object, _mockAppSettings.Object, _validatorMock.Object, _validatorMockSaveMarkedcript.Object, _validatorMockSubmitMarkedScript.Object, _validatorMockResetMarkedScript.Object);
+
             _mockService
                 .Setup(x => x.GetCandScores_Vet(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(new List<QScoreInfo>() { new QScoreInfo { }, new QScoreInfo { } }));
@@ -242,10 +251,10 @@ namespace OnlineMarker.Shared.Test.Controllers
             Assert.IsInstanceOf<OkObjectResult>(items);
             Assert.IsInstanceOf<List<QScoreInfo>>((List<QScoreInfo>)((OkObjectResult)items).Value);
             Assert.AreEqual(((List<QScoreInfo>)((OkObjectResult)items).Value).Count, 2);
-            _mockService.Verify(x => x.Seed_GetCandScores(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
+            //_mockService.Verify(x => x.Seed_GetCandScores(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
             _mockService.Verify(x => x.GetCandScores(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once());
-            _mockService.Verify(x => x.GetCandScores_Vet(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
-            _mockService.Verify(x => x.CandScoresVet_InsertTemp(It.IsAny<int>(), It.IsAny<string>()), Times.Once());
+            //_mockService.Verify(x => x.GetCandScores_Vet(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
+            _mockService.Verify(x => x.CandScoresVet_InsertTemp(It.IsAny<int>(), It.IsAny<string>()), Times.AtLeastOnce());
             _mockService.Verify(x => x.CandScoresReview_InsertTemp(It.IsAny<int>(), It.IsAny<string>()), Times.Never());
         }
 
@@ -322,5 +331,82 @@ namespace OnlineMarker.Shared.Test.Controllers
 
 
         }
+
+
+        [Test]
+        public async Task Submit_Marked_Script_Bad_Request()
+        {
+            _validatorMockSubmitMarkedScript.Setup(x => x.Validate(It.IsAny<SubmitMarkedScriptRequest>()))
+            .Returns(new ValidationResult(
+                new List<ValidationFailure>() { new ValidationFailure("papercode", "missing") }));
+
+            var items = await _controller.SubmitMarkedScript(new SubmitMarkedScriptRequest { });
+            Assert.IsInstanceOf<BadRequestObjectResult>(items);
+
+        }
+
+        [Test]
+        public async Task Submit_Marked_Script()
+        {
+            _validatorMockSubmitMarkedScript.Setup(x => x.Validate(It.IsAny<SubmitMarkedScriptRequest>()))
+            .Returns(new ValidationResult(
+                new List<ValidationFailure>() { }));
+
+            _mockService
+                .Setup(x => x.SeedScriptMark_byQues(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(true);
+
+            _mockService
+              .Setup(x => x.SeedScriptMark_Update(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()))
+              .Returns(true);
+
+            var items = await _controller.SubmitMarkedScript(new SubmitMarkedScriptRequest { papercode= "02", examtype= "examtype", markerid= "markerid", scriptno= "scriptno", seedmasterobj=true, seededqueslist = new List<QScoreInfo>() { } });
+            Assert.IsInstanceOf<OkObjectResult>(items);
+            Assert.AreEqual((string)((OkObjectResult)items).Value, "01-Successful");
+
+        }
+
+        [Test]
+        public async Task Reset_Script_Bad_Request()
+        {
+            _validatorMockResetMarkedScript.Setup(x => x.Validate(It.IsAny<ResetScriptRequest>()))
+            .Returns(new ValidationResult(
+                new List<ValidationFailure>() { new ValidationFailure("papercode", "missing") }));
+
+            var items = await _controller.ResetScript(new ResetScriptRequest { });
+            Assert.IsInstanceOf<BadRequestObjectResult>(items);
+
+        }
+
+        [Test]
+        public async Task Reset_Script()
+        {
+            _validatorMockResetMarkedScript.Setup(x => x.Validate(It.IsAny<ResetScriptRequest>()))
+            .Returns(new ValidationResult(
+                new List<ValidationFailure>() { }));
+
+            string filePath = @"C:\Test\a.txt";
+            string folderPath = @"C:\Test";
+
+          _mockFileService
+           .Setup(x => x.GetDirectoryInfo(It.IsAny<string>()))
+           .Returns(new DirectoryInfo(folderPath));
+
+            var list = new List<FileInfo>();
+            _mockFileService
+          .Setup(x => x.GetFiles(It.IsAny<DirectoryInfo>(), It.IsAny<string>(), It.IsAny<SearchOption>()))
+          .Returns(list.ToArray());
+
+            _mockService
+                .Setup(x => x.Seed_DeleteScores(It.IsAny<int>(), It.IsAny<string>()))
+                .Returns(true);
+
+
+            var items = await _controller.ResetScript(new ResetScriptRequest { papercode = "02", markerid = "markerid", scriptid = "scriptno",seeded=true, seedmasterobj = true });
+            Assert.IsInstanceOf<OkObjectResult>(items);
+            Assert.AreEqual((bool)((OkObjectResult)items).Value, true);
+
+        }
+
     }
 }

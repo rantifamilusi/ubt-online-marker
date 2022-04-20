@@ -4,6 +4,19 @@ namespace OnlineMarker.Api.Repository.Interfaces
 {
     public interface IOnlineMarkerService
     {
+        bool Seed_DeleteScores(int markid, string scriptfileid);
+        bool SeedScriptMark_byQues(int markid, string scriptno, int quesno, bool seeded);
+        bool ScriptMark_Update(int markid, string scriptno, decimal totalscore, bool vetted);
+        bool DeleteScores(int markid);
+        int GetScriptsMarked_Examiner(string examtype, string papercode, string examinercode);
+
+        bool CandScores_Insert(int markid, string scriptno);
+        bool CandScores_Delete(int markid);
+        bool CandScores_InsertReview(int markid, string scriptno);
+        bool VetScriptType_Update(string papercode, string examinercode, int vetscripttype);
+        bool VetCandScores_InsertAudit(int markid, string markerid);
+        bool SeedScriptMark_Update(int markid, string scriptno, bool seeded);
+        bool DepletedSeed_Update(string papercode);
         Task<List<PaperQuesInfo>> GetPaperQuesInfos(string examptype, string papercode);
 
         bool QScore_UpdateMarkedPages(int markid, int quesno, string markedpages);

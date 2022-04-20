@@ -29,9 +29,9 @@ namespace OnlineMarker.Api.Repository.Implementation
             return new DirectoryInfo(rootpath).GetFiles(path, searchOption);
         }
 
-        public FileInfo[] GetFiles(DirectoryInfo folder, string path, SearchOption searchOption = SearchOption.TopDirectoryOnly)
+        public FileInfo[] GetFiles(DirectoryInfo folder, string searchPattern, SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
-            return folder.GetFiles(path, searchOption);
+            return folder.GetFiles(searchPattern, searchOption);
         }
 
         public void WriteAllBytes(string path, byte[] byteData)

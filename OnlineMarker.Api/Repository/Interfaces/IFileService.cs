@@ -11,7 +11,7 @@ namespace OnlineMarker.Api.Repository.Interfaces
         FileInfo GetFileInfo(string path);
         FileInfo[] GetFiles(string rootpath, string path, SearchOption searchOption = SearchOption.TopDirectoryOnly);
 
-        FileInfo[] GetFiles(DirectoryInfo folder, string path, SearchOption searchOption = SearchOption.TopDirectoryOnly);
+        FileInfo[] GetFiles(DirectoryInfo folder, string searchPattern, SearchOption searchOption = SearchOption.TopDirectoryOnly);
 
         bool FileExists(string path);
 

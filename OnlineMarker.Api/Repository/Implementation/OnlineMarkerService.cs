@@ -19,7 +19,7 @@ namespace OnlineMarker.Api.Repository.Implementation
         public async Task<List<PaperQuesInfo>> GetPaperQuesInfos(string examptype, string papercode)
         {
             List<PaperQuesInfo> paperQuesInfos = new List<PaperQuesInfo>();
-          
+
             await _dbContext.LoadStoredProc("WS_sp_PaperQues_LoadbyCode")
                  .WithSqlParam("examtype", examptype)
                  .WithSqlParam("papercode", papercode)
@@ -31,13 +31,13 @@ namespace OnlineMarker.Api.Repository.Implementation
             return await Task.FromResult(paperQuesInfos);
         }
 
-    
+
 
         public int GetSeedScript(string examtype, string papercode, string examinercode)
         {
             try
             {
-                int? data = 0 ;
+                int? data = 0;
                 _dbContext.LoadStoredProc("WS_sp_GetSeedScript")
                                     .WithSqlParam("examtype", examtype)
                                     .WithSqlParam("papercode", papercode)
@@ -45,13 +45,13 @@ namespace OnlineMarker.Api.Repository.Implementation
                                     .ExecuteStoredProcAsync(x =>
                                     {
                                         data = x.ReadToValue<int>();
-                                       
+
                                     });
                 return data ?? 0;
             }
             catch
             {
-                
+
                 return -99;
             }
         }
@@ -80,17 +80,17 @@ namespace OnlineMarker.Api.Repository.Implementation
 
         public ScriptInfo GetScriptsInfo_Seed(string examtype, string papercode, string markerid)
         {
-           ScriptInfo   data = new();
+            ScriptInfo data = new();
             try
             {
-               
+
                 _dbContext.LoadStoredProc("WS_sp_GetScriptInfo_Seed")
                                     .WithSqlParam("examtype", examtype)
                                     .WithSqlParam("papercode", papercode)
                                     .WithSqlParam("markerid", markerid)
                                     .ExecuteStoredProcAsync(x =>
                                     {
-                                       var  d = x.ReadToList<ScriptInfo>();
+                                        var d = x.ReadToList<ScriptInfo>();
                                         data = d.ToList().FirstOrDefault();
 
                                     });
@@ -266,7 +266,7 @@ namespace OnlineMarker.Api.Repository.Implementation
                                     .WithSqlParam("examtype", examtype)
                                     .WithSqlParam("papercode", papercode)
                                     .WithSqlParam("examinercode", examinercode)
-                                   
+
                                     .ExecuteStoredProcAsync(x =>
                                     {
                                         var d = x.ReadToList<SeedInfo>();
@@ -350,23 +350,23 @@ namespace OnlineMarker.Api.Repository.Implementation
             return true;
         }
 
-        public  ScriptInfo GetScriptsInfo_ByExaminerNo(string examtype, string papercode, string examinercode)
+        public ScriptInfo GetScriptsInfo_ByExaminerNo(string examtype, string papercode, string examinercode)
         {
             ScriptInfo data = new();
             try
             {
 
-                 _dbContext.LoadStoredProc("WS_sp_GetScriptInfo_Review")
-                                    .WithSqlParam("examtype", examtype)
-                                    .WithSqlParam("papercode", papercode)
-                                    .WithSqlParam("examinercode", examinercode)
-                                
-                                    .ExecuteStoredProc(x =>
-                                    {
-                                        var d = x.ReadToList<ScriptInfo>();
-                                        data = d.ToList().FirstOrDefault();
+                _dbContext.LoadStoredProc("WS_sp_GetScriptInfo_Review")
+                                   .WithSqlParam("examtype", examtype)
+                                   .WithSqlParam("papercode", papercode)
+                                   .WithSqlParam("examinercode", examinercode)
 
-                                    });
+                                   .ExecuteStoredProc(x =>
+                                   {
+                                       var d = x.ReadToList<ScriptInfo>();
+                                       data = d.ToList().FirstOrDefault();
+
+                                   });
                 if (data == null)
                     return new ScriptInfo();
                 else
@@ -403,18 +403,18 @@ namespace OnlineMarker.Api.Repository.Implementation
         }
 
         public int Alloccentre_Insert(string examtype, string papercode, string examinercode, int totalalloc, int nextseedval)
-        { 
+        {
             try
             {
                 int? data = 0;
-               data = (int?)  _dbContext.LoadStoredProc("WS_sp_Alloccentre_Insert")
-                                    .WithSqlParam("examtype", examtype)
-                                    .WithSqlParam("papercode", papercode)
-                                    .WithSqlParam("examinercode", examinercode)
-                                    .WithSqlParam("totalalloc", totalalloc)
-                                    .WithSqlParam("nextseedval", nextseedval)
-                                    .ExecuteScalar();
-                return  data ?? 0;
+                data = (int?)_dbContext.LoadStoredProc("WS_sp_Alloccentre_Insert")
+                                     .WithSqlParam("examtype", examtype)
+                                     .WithSqlParam("papercode", papercode)
+                                     .WithSqlParam("examinercode", examinercode)
+                                     .WithSqlParam("totalalloc", totalalloc)
+                                     .WithSqlParam("nextseedval", nextseedval)
+                                     .ExecuteScalar();
+                return data ?? 0;
             }
             catch
             {
@@ -512,7 +512,7 @@ namespace OnlineMarker.Api.Repository.Implementation
             {
                 string data = string.Empty;
                 _dbContext.LoadStoredProc("WS_sp_GetExaminers_ToVet")
-                                    
+
                                     .WithSqlParam("papercode", papercode)
                                     .WithSqlParam("venuecode", venuecode)
                                     .WithSqlParam("team", team)
@@ -569,8 +569,8 @@ namespace OnlineMarker.Api.Repository.Implementation
 
                 return 0;
             }
-        
-    }
+
+        }
 
         public int ScriptInfoByCentre_Insert(string examtype, string papercode, string venuecode, string examinercode, string centreno)
         {
@@ -599,16 +599,16 @@ namespace OnlineMarker.Api.Repository.Implementation
             try
             {
                 string data = string.Empty;
-                 _dbContext.LoadStoredProc("WS_sp_GetNewAllocCentre")
-                                     .WithSqlParam("examtype", examtype)
-                                     .WithSqlParam("papercode", papercode)
-                                     .WithSqlParam("examinercode", allocid)
-                                     .ExecuteStoredProcAsync( x =>
-                                     {
+                _dbContext.LoadStoredProc("WS_sp_GetNewAllocCentre")
+                                    .WithSqlParam("examtype", examtype)
+                                    .WithSqlParam("papercode", papercode)
+                                    .WithSqlParam("examinercode", allocid)
+                                    .ExecuteStoredProcAsync(x =>
+                                   {
                                         var result = x.ReadToList<dynamic>();
-                                         data = result[0];
+                                        data = result[0];
 
-                                     });
+                                    });
                 return data;
             }
             catch
@@ -764,7 +764,7 @@ namespace OnlineMarker.Api.Repository.Implementation
             return newscript;
         }
 
-       
+
 
         public async Task<List<QScoreInfo>> Seed_GetCandScores(int markid, string markerid, string scriptno)
         {
@@ -786,7 +786,7 @@ namespace OnlineMarker.Api.Repository.Implementation
         {
             try
             {
-                
+
                 _dbContext.LoadStoredProc("WS_sp_VetCandScores_InsertTemp")
                                     .WithSqlParam("markid", markid)
                                     .WithSqlParam("markerid", markerid)
@@ -818,7 +818,7 @@ namespace OnlineMarker.Api.Repository.Implementation
             }
         }
 
-        public int CandScores_CheckVet (int markid)
+        public int CandScores_CheckVet(int markid)
         {
             try
             {
@@ -867,7 +867,7 @@ namespace OnlineMarker.Api.Repository.Implementation
             return await Task.FromResult(qScoreInfos);
         }
 
-        public async  Task<List<QScoreInfo>> GetCandScores_Temp(int markid, string markerid, string scriptno)
+        public async Task<List<QScoreInfo>> GetCandScores_Temp(int markid, string markerid, string scriptno)
         {
             List<QScoreInfo> qScoreInfos = new List<QScoreInfo>();
 
@@ -888,25 +888,25 @@ namespace OnlineMarker.Api.Repository.Implementation
             try
             {
                 int? data = 0;
-               data = (int?)_dbContext.LoadStoredProc("WS_sp_SaveQScores_Seed")
-                                    .WithSqlParam("examtype", oinfo.examtype)
-                                    .WithSqlParam("markid", oinfo.markid)
-                                     .WithSqlParam("papercode", oinfo.papercode)
-                                    .WithSqlParam("quesno", oinfo.quesno)
-                                     .WithSqlParam("score", oinfo.score)
-                                    .WithSqlParam("numticks", oinfo.numticks)
-                                     .WithSqlParam("examinercode", oinfo.examinercode)
-                                    .WithSqlParam("indexnumber", oinfo.indexnumber)
-                                     .WithSqlParam("scriptno", oinfo.scriptno)
-                                    .WithSqlParam("mqa", oinfo.mqa)
-                                     .WithSqlParam("mecherror", oinfo.mecherror)
-                                    .WithSqlParam("wordscount", oinfo.wordscount)
-                                 .WithSqlParam("seedmaster", oinfo.seedmaster)
-                                    .WithSqlParam("markedpages", oinfo.markedpages)
-                                    .WithSqlParam("seeded", oinfo.seeded)
-                                    .WithSqlParam("marksposition", oinfo.marksposition)
-                                                         .ExecuteScalar();
-                return data == null || data == 0 ? false: true;
+                data = (int?)_dbContext.LoadStoredProc("WS_sp_SaveQScores_Seed")
+                                     .WithSqlParam("examtype", oinfo.examtype)
+                                     .WithSqlParam("markid", oinfo.markid)
+                                      .WithSqlParam("papercode", oinfo.papercode)
+                                     .WithSqlParam("quesno", oinfo.quesno)
+                                      .WithSqlParam("score", oinfo.score)
+                                     .WithSqlParam("numticks", oinfo.numticks)
+                                      .WithSqlParam("examinercode", oinfo.examinercode)
+                                     .WithSqlParam("indexnumber", oinfo.indexnumber)
+                                      .WithSqlParam("scriptno", oinfo.scriptno)
+                                     .WithSqlParam("mqa", oinfo.mqa)
+                                      .WithSqlParam("mecherror", oinfo.mecherror)
+                                     .WithSqlParam("wordscount", oinfo.wordscount)
+                                  .WithSqlParam("seedmaster", oinfo.seedmaster)
+                                     .WithSqlParam("markedpages", oinfo.markedpages)
+                                     .WithSqlParam("seeded", oinfo.seeded)
+                                     .WithSqlParam("marksposition", oinfo.marksposition)
+                                                          .ExecuteScalar();
+                return data == null || data == 0 ? false : true;
             }
             catch
             {
@@ -976,6 +976,231 @@ namespace OnlineMarker.Api.Repository.Implementation
                                     .WithSqlParam("markid", markid)
                                     .WithSqlParam("quesno", quesno)
                                     .WithSqlParam("markedpages", markedpages)
+                                                         .ExecuteNonQuery();
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
+        }
+
+        public bool SeedScriptMark_Update(int markid, string scriptno, bool seeded)
+        {
+            try
+            {
+
+                _dbContext.LoadStoredProc("WS_sp_SeedScriptMark_update")
+                                    .WithSqlParam("markid", markid)
+                                    .WithSqlParam("scriptno", scriptno)
+                                    .WithSqlParam("seeded", seeded)
+                                                         .ExecuteNonQuery();
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
+        }
+
+        public bool DepletedSeed_Update(string papercode)
+        {
+            try
+            {
+
+                _dbContext.LoadStoredProc("WS_sp_DepletedSeed_Update")
+                                    .WithSqlParam("papercode", papercode)
+                                                         .ExecuteNonQuery();
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
+        }
+
+        public bool VetScriptType_Update(string papercode, string examinercode, int vetscripttype)
+        {
+            try
+            {
+
+                _dbContext.LoadStoredProc("WS_sp_VetScriptType_Update")
+                                    .WithSqlParam("papercode", papercode)
+                                    .WithSqlParam("examinercode", examinercode)
+                                    .WithSqlParam("vetscripttype", vetscripttype)
+                                                         .ExecuteNonQuery();
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
+        }
+
+        public bool VetCandScores_InsertAudit(int markid, string markerid)
+        {
+            try
+            {
+
+                _dbContext.LoadStoredProc("WS_sp_VetCandScores_InsertAudit")
+                                    .WithSqlParam("markid", markid)
+                                    .WithSqlParam("markerid", markerid)
+                                                         .ExecuteNonQuery();
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
+        }
+
+        public bool CandScores_Delete(int markid)
+        {
+            try
+            {
+
+                _dbContext.LoadStoredProc("WS_sp_CandScores_delete")
+                                    .WithSqlParam("markid", markid)
+                                                         .ExecuteNonQuery();
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
+        }
+
+        public bool CandScores_InsertReview(int markid, string scriptno)
+        {
+            try
+            {
+
+                _dbContext.LoadStoredProc("WS_sp_CandScores_InsertReview")
+                                    .WithSqlParam("markid", markid)
+                                    .WithSqlParam("scriptno", scriptno)
+                                                         .ExecuteNonQuery();
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
+        }
+
+        public bool CandScores_Insert(int markid, string scriptno)
+        {
+            try
+            {
+
+                _dbContext.LoadStoredProc("WS_sp_CandScores_Insert")
+                                    .WithSqlParam("markid", markid)
+                                    .WithSqlParam("scriptno", scriptno)
+                                                         .ExecuteNonQuery();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("IX_CandScores_duplicate_Ques"))
+                    return true;
+
+
+                return false;
+            }
+        }
+
+        public bool ScriptMark_Update(int markid, string scriptno, decimal totalscore, bool vetted)
+        {
+            try
+            {
+
+                _dbContext.LoadStoredProc("WS_sp_ScriptMark_update")
+                                    .WithSqlParam("markid", markid)
+                                    .WithSqlParam("scriptno", scriptno)
+                                    .WithSqlParam("totalscore", totalscore)
+                                    .WithSqlParam("vetted", vetted)
+                                                         .ExecuteNonQuery();
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
+        }
+
+        public bool DeleteScores(int markid)
+        {
+            try
+            {
+
+                _dbContext.LoadStoredProc("WS_sp_DeleteScores")
+                                    .WithSqlParam("markid", markid)
+                                                         .ExecuteNonQuery();
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
+        }
+
+        public int GetScriptsMarked_Examiner(string examtype, string papercode, string examinercode)
+        {
+            try
+            {
+                int? data = 0;
+                data = (int?)_dbContext.LoadStoredProc("WS_sp_GetTotalScriptsMarked")
+                                     .WithSqlParam("examtype", examtype)
+                                     .WithSqlParam("papercode", papercode)
+                                     .WithSqlParam("markid", examinercode)
+
+                                     .ExecuteScalar();
+                return data ?? 0;
+            }
+            catch
+            {
+
+                return 0;
+            }
+        }
+
+        public bool SeedScriptMark_byQues(int markid, string scriptno, int quesno, bool seeded)
+        {
+            try
+            {
+
+                _dbContext.LoadStoredProc("WS_sp_SeedScriptMark_byQues")
+                                    .WithSqlParam("markid", markid)
+                                    .WithSqlParam("scriptno", scriptno)
+                                    .WithSqlParam("quesno", quesno)
+                                    .WithSqlParam("seeded", seeded)
+                                                         .ExecuteNonQuery();
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
+        }
+
+        public bool Seed_DeleteScores(int markid, string scriptfileid)
+        {
+            try
+            {
+
+                _dbContext.LoadStoredProc("WS_sp_DeleteScores_Seed")
+                                    .WithSqlParam("markid", markid)
+                                    .WithSqlParam("scriptfileid", scriptfileid)
+                                    
                                                          .ExecuteNonQuery();
                 return true;
             }
