@@ -32,7 +32,9 @@ builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("Settin
 builder.Services.AddScoped<IOnlineMarkerService, OnlineMarkerService>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddTransient<IValidator<GetCandidateScriptsRequest>, GetCandidateScriptRequestValidator>();
-
+builder.Services.AddTransient<IValidator<SaveMarkedScriptsRequest>, SaveMarkedScriptsRequestValidator>();
+builder.Services.AddTransient<IValidator<SubmitMarkedScriptRequest>, SubmitMarkedScriptRequestValidator>();
+builder.Services.AddTransient<IValidator<ResetScriptRequest>, ResetScriptRequestValidator>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

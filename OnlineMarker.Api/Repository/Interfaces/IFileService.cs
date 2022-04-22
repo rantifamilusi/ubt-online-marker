@@ -9,6 +9,7 @@ namespace OnlineMarker.Api.Repository.Interfaces
         void WriteAllBytes(string path, byte[] byteData);
 
         FileInfo GetFileInfo(string path);
+        
         FileInfo[] GetFiles(string rootpath, string path, SearchOption searchOption = SearchOption.TopDirectoryOnly);
 
         FileInfo[] GetFiles(DirectoryInfo folder, string searchPattern, SearchOption searchOption = SearchOption.TopDirectoryOnly);

@@ -4,5 +4,6 @@
     {
         public string DataPath { get; set; }
         public string ExamYear { get; set; }
+        public string ExamType {get;set;}
     }
 }
